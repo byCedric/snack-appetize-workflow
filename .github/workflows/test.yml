@@ -33,7 +33,7 @@ jobs:
         run: |
           curl -o versions.json https://exp.host/--/api/v2/versions
           SDK=$(cat versions.json | jq '.sdkVersions["${{github.event.inputs.sdkVersion}}"]')
-          if [[ -z $SDK ]]; then echo 'Version ${{github.event.inputs.sdkVersion}} not found'; exit 1; fi
+          if [[ -n $SDK ]]; then echo 'Version ${{github.event.inputs.sdkVersion}} not found'; exit 1; fi
           echo "::set-output name=version::$(echo $SDK | jq '.androidClientVersion')"
           echo "::set-output name=url::$(echo $SDK | jq '.androidClientUrl')"
 
