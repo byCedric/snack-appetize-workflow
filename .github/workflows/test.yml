@@ -38,8 +38,8 @@ jobs:
             const { sdkVersions } = require('./versions.json')
             const version = '${{ github.event.inputs.sdkVersion }}'
 
-            if (!sdkVersions[version]) throw new Error(`Version ${version} not found.`)
-            if (!sdkVersions[version].androidClientUrl) throw new Error(`No Android client for ${version}`)
+            if (!sdkVersions[version]) throw new Error(`Version '${version}' not found.`)
+            if (!sdkVersions[version].androidClientUrl) throw new Error(`No Android client for '${version}'`)
 
             return JSON.stringify({
               version: sdkVersions[version].androidClientVersion,
