@@ -27,13 +27,15 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 16.x
-      - name: Resolve Android client
+      - name: Resolve versions
+        run: curl -F -o versions.json https://exp.host/--/api/v2/versions
+      - name: Validate Android client
         uses: actions/github-script@v4
         id: client
         with:
           result-encoding: string
           script: |
-            const { sdkVersions } = await github.request('https://exp.host/--/api/v2/versions')
+            const { sdkVersions } = require('./versions.json')
             const version = '${{ github.event.inputs.sdkPlatform }}'
 
             if (!sdkVersions[version]) throw new Error(`Version ${version} not found.`)
