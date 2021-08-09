@@ -1,9 +1,5 @@
 name: Download test
 
-defaults:
-  run:
-    working-directory: appetize
-
 on:
   workflow_dispatch:
     inputs:
@@ -37,4 +33,5 @@ jobs:
           expo-version: 4.x
           expo-cache: true
       - name: Download Android client
+        working-directory: android
         run: expo client:install:android --latest
