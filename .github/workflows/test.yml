@@ -33,16 +33,15 @@ jobs:
         with:
           result-encoding: string
           script: |
-            const sdkVersion = '${{ github.event.inputs.sdkPlatform }}'
-            const response = await fetch('https://exp.host/--/api/v2/versions')
-            const { sdkVersions } = await response.json()
+            const { sdkVersions } = await github.request('https://exp.host/--/api/v2/versions')
+            const version = '${{ github.event.inputs.sdkPlatform }}'
 
-            if (!sdkVersions[sdkVersion]) throw new Error(`Version ${sdkVersion} not found.`)
-            if (!sdkVersions[sdkVersion].androidClientUrl) throw new Error(`No Android client for ${sdkVersion}`)
+            if (!sdkVersions[version]) throw new Error(`Version ${version} not found.`)
+            if (!sdkVersions[version].androidClientUrl) throw new Error(`No Android client for ${version}`)
 
             return JSON.stringify({
-              version: sdkVersions[sdkVersion].androidClientVersion,
-              url: sdkVersions[sdkVersion].androidClientUrl,
+              version: sdkVersions[version].androidClientVersion,
+              url: sdkVersions[version].androidClientUrl,
             })
       - name: Download Android client
         run: curl -F -o android.apk $(echo "${{ steps.client.outputs.result }}" | jq .url)
