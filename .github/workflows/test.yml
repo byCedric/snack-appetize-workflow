@@ -1,0 +1,40 @@
+name: Download test
+
+defaults:
+  run:
+    working-directory: appetize
+
+on:
+  workflow_dispatch:
+    inputs:
+      deploy:
+        description: type "deploy" to update Appetize (without it retrieves the version)
+        required: false
+      appetizeQueue:
+        description: Appetize queue to upgrade (main/future/all)
+        default: main
+        required: true
+      sdkVersion:
+        description: SDK version to use for Expo Go (e.g. 42.0.0)
+        required: true
+      sdkPlatform:
+        description: Platform to update (android/ios/all)
+        default: all
+        required: true
+
+jobs:
+  test:
+    if: contains('all android', github.event.inputs.sdkPlatform)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Use Node.js 16.x
+        uses: actions/setup-node@v1
+        with:
+          node-version: 16.x
+      - name: Use Expo CLI 4.x
+        uses: expo/expo-github-action@v6
+        with:
+          expo-version: 4.x
+          expo-cache: true
+      - name: Download Android client
+        run: expo client:install:android --latest
