@@ -34,7 +34,7 @@ jobs:
           curl --silent -o versions.json https://exp.host/--/api/v2/versions
 
           VERSION=${{ github.event.inputs.sdkVersion }}
-          SDK=$(cat versions.json | jq '.sdkVersions["${{github.event.inputs.sdkVersion}}"]')
+          SDK=$(cat versions.json | jq ".sdkVersions[\"$VERSION\"]")
           ANDROID_VERSION=$(echo $SDK | jq '.androidClientVersion')
           ANDROID_URL=$(echo $SDK | jq '.androidClientUrl')
           
