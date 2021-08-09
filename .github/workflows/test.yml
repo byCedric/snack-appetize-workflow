@@ -27,10 +27,21 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 16.x
-      - name: Use Expo CLI 4.x
-        uses: expo/expo-github-action@v6
-        with:
-          expo-version: 4.x
-          expo-cache: true
+      - name: Resolve Android client
+        uses: actions/github-script@v4
+        id: client
+        result-encoding: string
+        script: |
+          const sdkVersion = '${{ github.event.inputs.sdkPlatform }}'
+          const response = await fetch('https://exp.host/--/api/v2/versions')
+          const { sdkVersions } = await response.json()
+
+          if (!sdkVersions[sdkVersion]) throw new Error(`Version ${sdkVersion} not found.`)
+          if (!sdkVersions[sdkVersion].androidClientUrl) throw new Error(`No Android client for ${sdkVersion}`)
+
+          return JSON.stringify({
+            version: sdkVersions[sdkVersion].androidClientVersion,
+            url: sdkVersions[sdkVersion].androidClientUrl,
+          })
       - name: Download Android client
-        run: expo client:install:android --latest
+        run: curl -F -o android.apk $(echo "${{ steps.client.outputs.result }}" | jq .url)
