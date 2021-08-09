@@ -31,7 +31,7 @@ jobs:
       - name: Resolve Android client
         id: client
         run: |
-          curl -o versions.json https://exp.host/--/api/v2/versions > /dev/null
+          curl --silent -o versions.json https://exp.host/--/api/v2/versions
           SDK=$(cat versions.json | jq '.sdkVersions["${{github.event.inputs.sdkVersion}}"]')
           if [[ -n $SDK ]]; then echo 'Version ${{github.event.inputs.sdkVersion}} not found'; exit 1; fi
           echo "::set-output name=version::$(echo $SDK | jq '.androidClientVersion')"
