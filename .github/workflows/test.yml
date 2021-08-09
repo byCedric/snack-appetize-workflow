@@ -48,7 +48,7 @@ jobs:
         run: curl -o android.apk ${{ steps.client.outputs.url }}
 
       - name: Upload to Appetize
-        run: curl --http1.1 https://$APPETIZE_TOKEN@api.appetize.io/v1/apps/$APPETIZE_APP -F "file=@android.apk" -F "platform=android"
+        run: curl --silent --http1.1 https://$APPETIZE_TOKEN@api.appetize.io/v1/apps/$APPETIZE_APP -F "file=@android.apk" -F "platform=android" > /dev/null
         env:
           APPETIZE_TOKEN: ${{ secrets.APPETIZE_TOKEN_CUSTOM }}
           APPETIZE_APP: ${{ secrets.APPETIZE_APP_CUSTOM }}
