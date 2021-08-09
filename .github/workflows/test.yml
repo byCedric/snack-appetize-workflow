@@ -32,10 +32,18 @@ jobs:
         id: client
         run: |
           curl --silent -o versions.json https://exp.host/--/api/v2/versions
+
+          VERSION=${{ github.event.inputs.sdkVersion }}
           SDK=$(cat versions.json | jq '.sdkVersions["${{github.event.inputs.sdkVersion}}"]')
-          if [[ -n $SDK ]]; then echo 'Version ${{github.event.inputs.sdkVersion}} not found'; exit 1; fi
-          echo "::set-output name=version::$(echo $SDK | jq '.androidClientVersion')"
-          echo "::set-output name=url::$(echo $SDK | jq '.androidClientUrl')"
+          ANDROID_VERSION=$(echo $SDK | jq '.androidClientVersion')
+          ANDROID_URL=$(echo $SDK | jq '.androidClientUrl')
+          
+          if [[ -n $SDK ]]; then echo "SDK '$VERSION' not found"; exit 1; fi
+          if [[ -n $ANDROID_VERSION ]]; then echo "No Android client version for SDK '$VERSION'"; exit 1; fi
+          if [[ -n $ANDROID_URL ]]; then echo "No Android client url for SDK '$VERSION'"; exit 1; fi
+
+          echo "::set-output name=version::$ANDROID_VERSION"
+          echo "::set-output name=url::$ANDROID_URL"
 
       # - name: Validate Android client
       #   uses: actions/github-script@v4
