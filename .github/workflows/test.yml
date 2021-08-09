@@ -14,12 +14,12 @@ on:
         description: Appetize queue to upgrade (main/future/all)
         default: main
         required: true
-      sdkVersion:
-        description: SDK version to use for Expo Go (e.g. 42.0.0)
-        required: true
       sdkPlatform:
         description: Platform to update (android/ios/all)
         default: all
+        required: true
+      sdkVersion:
+        description: SDK version to use for Expo Go (e.g. 42.0.0)
         required: true
 
 jobs:
