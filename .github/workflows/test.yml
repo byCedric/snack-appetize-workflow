@@ -43,23 +43,13 @@ jobs:
           echo "Resolved client $CLIENT_VERSION from SDK $VERSION"
           echo "::set-output name=url::$CLIENT_URL"
           echo "::set-output name=version::$CLIENT_VERSION"
-
-      # - name: Validate Android client
-      #   uses: actions/github-script@v4
-      #   id: client
-      #   with:
-      #     result-encoding: string
-      #     script: |
-      #       const { sdkVersions } = require('./versions.json')
-      #       const version = '${{ github.event.inputs.sdkVersion }}'
-
-      #       if (!sdkVersions[version]) throw new Error(`Version '${version}' not found.`)
-      #       if (!sdkVersions[version].androidClientUrl) throw new Error(`No Android client for '${version}'`)
-
-      #       return JSON.stringify({
-      #         version: sdkVersions[version].androidClientVersion,
-      #         url: sdkVersions[version].androidClientUrl,
-      #       })
       
-      # - name: Download Android client
-      #   run: curl -o android.apk ${{ steps.client.outputs.url }}
+      - name: Download Android client
+        run: curl -o android.apk ${{ steps.client.outputs.url }}
+
+      - name: Upload to Appetize
+        run: curl --http1.1 https://$APPETIZE_TOKEN@api.appetize.io/v1/apps/$APPETIZE_APP -F "file=@android.apk" -F "platform=android"
+        env:
+          APPETIZE_TOKEN: ${{ secrets.APPETIZE_TOKEN }}
+          APPETIZE_APP: ${{ secrets.APPETIZE_APP_CUSTOM }}
+
