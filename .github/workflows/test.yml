@@ -27,8 +27,10 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 16.x
+
       - name: Resolve versions
         run: curl -o versions.json https://exp.host/--/api/v2/versions
+      
       - name: Validate Android client
         uses: actions/github-script@v4
         id: client
@@ -45,5 +47,6 @@ jobs:
               version: sdkVersions[version].androidClientVersion,
               url: sdkVersions[version].androidClientUrl,
             })
+      
       - name: Download Android client
-        run: curl -o android.apk $(echo "${{ steps.client.outputs.result }}" | jq .url)
+        run: curl -o android.apk $(echo '${{ steps.client.outputs.result }}' | jq .url)
